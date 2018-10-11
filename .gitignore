@@ -61,8 +61,6 @@ typings/
 # next.js build output
 .next
 server/src/configuration/config.js
-server/package-lock.json
 .vscode/settings.json
-client/package-lock.json
 client/.env.development
 client/.env.production
