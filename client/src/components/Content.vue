@@ -5,16 +5,24 @@
         v-model="dialog"
         max-width="80%"
       >
-        <v-card>
+        <v-card v-bind:style="(dialogChartOpts||{}).styleObject">
           <v-card-title v-if="!dialogChartOpts" class="grey lighten-3" >{{dialogHeader}}</v-card-title>
 
-          <v-card-text v-if="!dialogChartOpts">
+          <v-card-text v-if="!dialogChartOpts&&!dialogGmapOpts">
             {{dialogMessage}}
           </v-card-text>
           <v-container v-if="dialogChartOpts">
-          <Chart :datasets="dialogChartOpts.datasets" :type="dialogChartOpts.type" :labels="dialogChartOpts.labels" :title="dialogChartOpts.title"  />
+          <Chart :datasets="dialogChartOpts.datasets" :type="dialogChartOpts.type" :labels="dialogChartOpts.labels" :title="dialogChartOpts.title" :styleObject="dialogChartOpts.chartStyleObject"  />
           <br/>
         </v-container>
+
+        <gmap-map v-if="dialogGmapOpts" :center="dialogGmapOpts.markers[0].position" :zoom="zoom" style="width:100%;height:80vh" :mapTypeControl="false">
+            <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+              <div v-html="infoContent"></div>
+            </gmap-info-window>
+            <gmap-marker :key="index" v-for="(m, index) in dialogGmapOpts.markers" :title="m.title" :position="m.position" :clickable="true" @click="toggleInfoWindow(m,index)" ></gmap-marker>
+          </gmap-map>
+
         </v-card>
       </v-dialog>
 
@@ -37,16 +45,18 @@
       <v-data-iterator  :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" hide-actions row wrap >
 
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3 >
-          <v-card raised hover v-on:click.native="showContractStats(props.item.contractNumber)">
+          <v-card raised hover v-on:click.native="showContractStats(props.item.contractNumber, true)">
             <v-card-actions>
-
-              {{ props.item.contractNumber }}
               <v-spacer></v-spacer>
-               <v-btn @click.stop="displayMap(props.item, $event)">{{props.item.showMap||props.item.showLoading?'info':'map'}}</v-btn>
-
+               <v-btn @click.stop="displayMap(props.item, $event)">{{props.item.showMap||props.item.showLoading?'info':'map view'}}</v-btn>
+               <v-btn @click.stop="showDialogMap(props.item)" v-if="props.item.showMap&&!props.item.showLoading">enlarge</v-btn>
             </v-card-actions>
             <v-divider></v-divider>
             <v-list  v-if="!props.item.showMap">
+              <v-list-tile>
+                <v-list-tile-content>Contract Number:</v-list-tile-content>
+              <v-list-tile-content class="align-end">  {{ props.item.contractNumber }} </v-list-tile-content>
+            </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>Contract Name:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.contractName }}</v-list-tile-content>
@@ -64,7 +74,7 @@
                 <v-list-tile-content class="align-end"><v-checkbox v-model="props.item.isActive" v-on:click.stop=""></v-checkbox></v-list-tile-content>
               </v-list-tile>
             </v-list>
-            <gmap-map :center="props.item.markers[0].position" :zoom="zoom" style="width:100%;height:208px" :mapTypeControl="false" v-if="props.item.showMap">
+            <gmap-map :center="props.item.markers[0].position" :zoom="zoom" style="width:100%;height:255px" :mapTypeControl="false" v-if="props.item.showMap">
                 <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
                   <div v-html="infoContent"></div>
                 </gmap-info-window>
@@ -78,8 +88,7 @@
 </v-container>
 </v-card>
     </v-container>
-
-    <v-container fluid grid-list-md transition="slide-y-transition" >
+    <v-container fluid grid-list-md transition="slide-y-transition" ref="statsHolder" >
       <v-card>
 
           <v-toolbar color="white" flat>
@@ -99,9 +108,9 @@
 
     <v-layout row wrap v-for="(ucr,index) in usageChartOpts" :key="index">
               <v-flex v-bind="{[$vuetify.breakpoint.xs?'xs12':($vuetify.breakpoint.sm?`xs${Math.round(12/ucr.length)*2}`:`xs${Math.round(12/ucr.length)}`)]: true}" v-for="(uc, index) in ucr"
-              :key="index">
-                <v-card raised hover v-on:click.native="showDialogChart(uc)">
-                  <Chart :datasets="uc.datasets" :type="uc.type" :labels="uc.labels" :title="uc.title"  />
+              :key="index" >
+                <v-card raised hover v-on:click.native="showDialogChart(uc)" v-bind:style="uc.styleObject">
+                  <Chart :datasets="uc.datasets" :type="uc.type" :labels="uc.labels" :title="uc.title" :styleObject="uc.chartStyleObject"  />
                   <br/>
                 </v-card>
               </v-flex>
@@ -160,12 +169,13 @@ export default {
   },
   watch: {
     dialog (val) {
-      if (!val) this.dialogChartOpts = null
+      if (!val) this.dialogChartOpts = this.dialogGmapOpts = null
     }
   },
   data: () => (
     {
       showStatsCancelSource: null,
+      dialogGmapOpts: null,
       dialogChartOpts: null,
       stats: [],
       showContract: true,
@@ -193,6 +203,11 @@ export default {
     }
   ),
   methods: {
+    showDialogMap (item) {
+      this.dialogGmapOpts = item
+      this.dialogHeader = item.contractNumber
+      this.dialog = true
+    },
     showDialogChart (chartOpts) {
       this.dialogChartOpts = chartOpts
       this.dialog = true
@@ -264,6 +279,7 @@ export default {
     },
     async getContracts () {
       this.$store.dispatch('setLoading', {contracts: true, charts: true})
+      this.$store.dispatch('setContractNumber', '')
       await this.$axios({
         method: 'GET',
         url: new URL('/api/reports/contracts', config.koahost).href
@@ -281,7 +297,9 @@ export default {
         })
         .finally(() => this.$store.dispatch('setLoading', {contracts: false}))
     },
-    async showContractStats (contractNumber) {
+    async showContractStats (contractNumber, doScrollTo) {
+      if (doScrollTo) window.scroll({top: this.$refs['statsHolder'].offsetTop - document.body.scrollTop, left: 0, behavior: 'smooth' });
+
       if (this.showStatsCancelSource) {
         this.showStatsCancelSource.cancel('Operation canceled due to new requests')
         this.showStatsCancelSource = null
@@ -347,7 +365,14 @@ export default {
               })),
               type: 'line',
               labels: dateKeys,
-              title: 'Tokens Consumed By Month'
+              title: 'Tokens Consumed By Month',
+              styleObject: {
+                "overflow-y":"scroll",
+
+              },
+              chartStyleObject:{
+                "min-width":dateKeys.length*20+"px"
+              }
             }]]
           }
         })

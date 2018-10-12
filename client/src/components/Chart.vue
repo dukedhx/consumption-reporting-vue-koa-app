@@ -1,5 +1,7 @@
 <template>
-<canvas ref="chartHolder"></canvas>
+  <div v-bind:style="styleObject">
+<canvas ref="chartHolder" ></canvas>
+</div>
 </template>
 <script>
 import Chart from 'chart.js'
@@ -11,7 +13,7 @@ export default {
       today: new Date().today() + ' ' + new Date().timeNow()
     }
   },
-  props: ['datasets', 'labels', 'type', 'title'],
+  props: ['datasets', 'labels', 'type', 'title','styleObject'],
   mounted () {
     let config = {
       type: this.type,
