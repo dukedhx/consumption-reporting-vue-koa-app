@@ -19,7 +19,8 @@
     "lodash": "^4.17.11",
     "passport-oauth2": "^1.4.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "eslint": ">=5.0.0",
@@ -55,7 +56,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint ./client/src --fix",
-    "test": "vue-cli-service lint ./client/src --no-fix && NODE_ENV=default vue-cli-service build && node server/src/server.js test"
+    "test": "vue-cli-service lint ./client/src --no-fix && NODE_ENV=default vue-cli-service build && node server/src/server.js test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -77,5 +80,6 @@
   "bugs": {
     "url": "https://github.com/Autodesk-Forge/tokenflex-nodejs-report.webapp/issues"
   },
-  "homepage": "https://github.com/Autodesk-Forge/tokenflex-nodejs-report.webapp/"
+  "homepage": "https://github.com/Autodesk-Forge/tokenflex-nodejs-report.webapp/",
+  "snyk": true
 }
