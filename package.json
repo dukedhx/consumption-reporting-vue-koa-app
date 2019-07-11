@@ -1,81 +1,81 @@
 {
-  "name": "tokenflex-nodejs-report.webapp",
-  "version": "1.0.0",
-  "description": "A Forge application to report on consumption data.",
-  "main": "server/src/server.js",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
   "dependencies": {
-    "@koa/cors": "^2.2.2",
-    "config": "^2.0.1",
-    "event-stream": "^3.3.4",
-    "koa": "^2.5.2",
+    "@koa/cors": "^2.2.3",
+    "bad-words": "^3.0.2",
+    "config": "^3.0.1",
+    "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "koa-favicon": "^2.0.1",
     "koa-helmet": "^4.0.0",
-    "koa-morgan": "^1.0.1",
-    "koa-passport": "^4.1.0",
+    "koa-passport": "^4.1.1",
     "koa-router": "^7.4.0",
-    "koa-session": "^5.8.2",
+    "koa-session": "^5.10.1",
     "koa-static": "^5.0.0",
-    "lodash": "^4.17.11",
+    "mongoose": "^5.4.16",
     "passport-oauth2": "^1.4.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "vue": "^2.6.6",
+    "vue-router": "^3.0.2",
+    "vuetify": "^1.3.0"
   },
   "devDependencies": {
-    "eslint": ">=5.0.0",
-    "ajv": ">=5.0.0",
-    "acorn": ">=6.0.0",
-    "@babel/polyfill": "^7.0.0-beta.49",
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-eslint": "^3.7.0",
-    "@vue/cli-service": "^3.7.0",
-    "@vue/eslint-config-standard": "^4.0.0",
-    "animated-number-vue": "^0.1.3",
-    "axios": "^0.19.0",
-    "chart.js": "^2.7.2",
-    "core-js": "^2.0.0",
-    "nodemon": "^1.18.3",
-    "standard": "^12.0.1",
-    "vue": "^2.5.17",
+    "@mdi/font": "^3.5.95",
+    "@vue/cli-plugin-babel": "^3.5.1",
+    "@vue/cli-plugin-eslint": "^3.5.1",
+    "@vue/cli-service": "^3.5.1",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "axios": "^0.18.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.7.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-html": "^5.0.3",
+    "eslint-plugin-vue": "^5.2.2",
+    "jest": "^24.7.1",
+    "material-design-icons-iconfont": "^4.0.5",
+    "nodemon": "^1.18.10",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "supertest": "^4.0.2",
     "vue-cli-plugin-axios": "0.0.4",
-    "vue-cli-plugin-vuetify": "^0.1.6",
-    "vue-router": "^3.0.1",
-    "vue-template-compiler": "^2.5.17",
-    "vue2-google-maps": "^0.10.2",
-    "vuetify": "^1.0.19",
-    "vuex": "^3.0.1"
+    "vue-cli-plugin-vuetify": "^0.4.6",
+    "vue-jest": "^3.0.4",
+    "vue-template-compiler": "^2.5.21",
+    "vuetify-loader": "^1.0.5",
+    "vuex": "^3.1.0"
   },
-  "scripts": {
-    "start": "NODE_ENV=production node server/src/server.js",
-    "dev": "nodemon server/src/server.js",
-    "prod": "NODE_ENV=production node server/src/server.js",
-    "init": "node server/src/configuration/init.js",
-    "postinstall": "node server/src/configuration/init.js",
-    "standard": "standard server/src/**/*.js --fix",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint ./client/src --fix",
-    "test": "vue-cli-service lint ./client/src --no-fix && NODE_ENV=default vue-cli-service build && node server/src/server.js test"
+  "license": "MIT",
+  "name": "forge-digital-catalog-app",
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/*",
+      "src/*",
+      "public/*"
+    ],
+    "delay": "2500"
   },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Autodesk-Forge/tokenflex-nodejs-report.webapp.git"
+    "url": "https://wwfo-cs@dev.azure.com/wwfo-cs/Forge%20Digital%20Catalog/_git/Forge%20Digital%20Catalog"
   },
-  "keywords": [
-    "Autodesk",
-    "Forge",
-    "Boilerplate",
-    "Koa",
-    "Javascript",
-    "Passport"
-  ],
-  "engines": {
-    "node": ">8.0"
+  "scripts": {
+    "build": "vue-cli-service build",
+    "dev": "NODE_ENV=development nodemon server",
+    "init": "node config/init.js",
+    "lint": "vue-cli-service lint",
+    "serve": "vue-cli-service serve",
+    "start": "NODE_ENV=production node server",
+    "test": "jest",
+    "windev": "set NODE_ENV=development&& npm run dev",
+    "setadmin": "node config/setAdmin.js"
   },
-  "author": "Bastien Mazeran & Bryan Huang",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Autodesk-Forge/tokenflex-nodejs-report.webapp/issues"
-  },
-  "homepage": "https://github.com/Autodesk-Forge/tokenflex-nodejs-report.webapp/"
+  "version": "0.1.0"
 }
