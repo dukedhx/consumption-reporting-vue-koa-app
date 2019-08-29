@@ -13,7 +13,9 @@
     "dev": "cross-env NODE_ENV=development forever -c 'node -r @babel/register' --watchDirectory ./src/server  ./src/server/index.js ",
     "build": "npm run build-server && npm run build-client",
     "clean": "rimraf bin",
-    "serve": "webpack-dev-server"
+    "serve": "webpack-dev-server",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Philippe Leefsma",
   "license": "MIT",
@@ -29,7 +31,7 @@
     "url": "git+https://github.com/Autodesk-Forge/forge-rcdb.nodejs.git"
   },
   "dependencies": {
-    "adm-zip": "^0.4.7",
+    "adm-zip": "^0.4.11",
     "archiver": "2.0.0",
     "async": "2.4.1",
     "autobind-decorator": "^2.4.0",
@@ -58,14 +60,15 @@
     "qrcode.react": "0.7.2",
     "react-json-view": "1.13.3",
     "react-s-alert": "1.3.2",
-    "react-tooltip": "3.4.0",
+    "react-tooltip": "3.8.1",
     "rimraf": "^2.6.1",
     "rmdir": "^1.2.0",
     "sanitize-html": "1.15.0",
     "socket.io": "2.0.3",
-    "superagent": "3.7.0",
+    "superagent": "3.8.1",
     "util": "^0.10.3",
-    "webpurify": "^2.1.0"
+    "webpurify": "^2.1.0",
+    "snyk": "^1.221.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
@@ -159,7 +162,7 @@
     "react-spinkit": "^3.0.0",
     "react-stars": "2.2.4",
     "react-table": "^6.10.0",
-    "reapop":"git+https://git@github.com/LouisBarranqueiro/reapop#master",
+    "reapop": "git+https://git@github.com/LouisBarranqueiro/reapop#master",
     "redbox-react": "^1.6.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.2.0",
@@ -185,5 +188,6 @@
     "webpack-manifest-plugin": "^2.0.4",
     "webpack-md5-hash": "0.0.5",
     "worker-loader": "^2.0.0"
-  }
+  },
+  "snyk": true
 }
