@@ -5,7 +5,7 @@
   "main": "server/src/server.js",
   "dependencies": {
     "@koa/cors": "^2.2.2",
-    "config": "^2.0.1",
+    "config": "^3.3.1",
     "event-stream": "^3.3.4",
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.1",
