@@ -4,7 +4,7 @@
   "description": "A Forge application to report on consumption data.",
   "main": "server/src/server.js",
   "dependencies": {
-    "@koa/cors": "^2.2.2",
+    "@koa/cors": "^5.0.0",
     "config": "^2.0.1",
     "event-stream": "^3.3.4",
     "koa": "^2.5.2",
